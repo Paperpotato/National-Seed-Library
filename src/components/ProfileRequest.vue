@@ -44,7 +44,7 @@
   </v-row>
 </template>
 
-<script lang='ts'>
+<script>
 import { dbWishlist } from '@/services/firebase'
 import { mapState } from 'vuex';
   export default {
@@ -52,18 +52,18 @@ import { mapState } from 'vuex';
       return {
         dialog: false,
         item: 0,
-        wishlist: [] as {user: string; name: string}[],
-        email: '' as string
+        wishlist: [],
+        email: ''
       }
     },
     computed: {
       ...mapState(['profile']),
       decodedUsername() {
-        return decodeURIComponent(this.$route.params.username) as string
+        return decodeURIComponent(this.$route.params.username)
       }
     },
     methods: {
-      profileLink(username: string) {
+      profileLink(username) {
         const encodedUsername = encodeURIComponent(username)
         return window.open(`https://seedrs.netlify.app/#/user/${encodedUsername}`)
       },
@@ -71,22 +71,15 @@ import { mapState } from 'vuex';
     created() {
       this.$store.dispatch('getProfile')
       console.log(this.decodedUsername)
-      //@ts-expect-error
           dbWishlist.doc(this.decodedUsername).get().then(doc => {
-          const seedArray = [] as {}[]
-      //@ts-expect-error
-      // console.log(doc.data())
-          doc.data().wishlist.forEach((seed: string) => {
+          const seedArray = []
+          doc.data().wishlist.forEach((seed) => {
             
                 seedArray.push({
-                  user: this.decodedUsername as string,
-                  name: seed as string
+                  user: this.decodedUsername,
+                  name: seed
             })
-              
-            
-            
           })
-          //@ts-expect-error
           this.wishlist = seedArray
           // this.loading = false
         })

@@ -48,14 +48,14 @@
   </v-row>
 </template>
 
-<script lang='ts'>
+<script>
 import { dbWishlist } from '@/services/firebase'
   export default {
     data () {
       return {
         dialog: false,
         item: 0,
-        wishlist: [] as {}[]
+        wishlist: []
       }
     },
     computed: {
@@ -64,7 +64,7 @@ import { dbWishlist } from '@/services/firebase'
       // }
     },
     methods: {
-      profileLink(username: string, contact: string, itemName: string, location: string) {
+      profileLink(username, contact, itemName, location) {
         const encodedUsername = encodeURIComponent(username)
         const encodedSubject = encodeURIComponent(`${itemName}: ${location}`)
         window.open(`https://nationalseedlibrary.com/#/user/${encodedUsername}`)
@@ -73,17 +73,17 @@ import { dbWishlist } from '@/services/firebase'
     },
     created() {
           dbWishlist.get().then(querySnapshot => {
-          const seedArray = [] as {}[]
+          const seedArray = []
           querySnapshot.forEach((doc) => {
             console.log(doc.id, '=>', doc.data())
             const docData = doc.data()
 
-            docData.wishlist.forEach((seed: {name: string; contact: string; location: string}) => {
+            docData.wishlist.forEach((seed) => {
             
                 seedArray.push({
-                  user: docData.user as string,
-                  name: seed.name as string,
-                  contact: seed.contact ? seed.contact : '' as string,
+                  user: docData.user,
+                  name: seed.name,
+                  contact: seed.contact ? seed.contact : '',
                   location: seed.location
             })
               

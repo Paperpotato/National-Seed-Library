@@ -30,7 +30,7 @@
   </v-card>
 </template>
 
-<script lang='ts'>
+<script>
 import { dbUserRef } from '../services/firebase'
   export default {
     data () {
@@ -49,14 +49,14 @@ import { dbUserRef } from '../services/firebase'
             email: 'sample email',
             location: 'sample location'
           },
-        ] as { name: string; email: string; location: string }[],
+        ],
       }
     },
     created() {
         this.$store.dispatch('getProfile')
 
         dbUserRef.get().then(querySnapshot => {
-          const userArray = [] as { name: string; email: string; location: string }[]
+          const userArray = []
         //   console.log(querySnapshot.docs)
           querySnapshot.forEach((doc) => {
             const docData = doc.data()
