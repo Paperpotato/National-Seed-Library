@@ -146,7 +146,7 @@
   </v-container>
 </template>
 
-<script lang='ts'>
+<script>
 import { mapState } from 'vuex'
 import { uuid } from 'vue-uuid'
 import { dbUserRef, dbSeedBank, dbPublicUserRef, fbAuth } from '../services/firebase'
@@ -161,13 +161,13 @@ export default {
     },
   data: () => {
   return {
-    email: '' as string,
-    password: '' as string,
-    dialog: false as boolean,
-    snack: false as boolean,
-    snackColor: '' as string,
-    snackText: '' as string,
-    max25chars: (v: string) => v.length <= 25 || 'Input too long!',
+    email: '' ,
+    password: '' ,
+    dialog: false,
+    snack: false,
+    snackColor: '' ,
+    snackText: '' ,
+    max25chars: (v) => v.length <= 25 || 'Input too long!',
     pagination: {},
     headers: [
       {
@@ -205,12 +205,12 @@ export default {
         }},
   computed: {
     ...mapState(['user', 'profile', 'loginDialog', 'loggedIn']),
-    formTitle(): string {
+    formTitle() {
       return this.editedIndex === -1 ? 'Add item' : 'Edit Item'
     },
     defaultItem() {
         return {
-      id: '' as string,
+      id: '' ,
       name: '',
       quantity: null,
       notes: '',
@@ -227,11 +227,11 @@ export default {
   },
   created() {
     this.$store.dispatch('getProfile')
-    //@ts-expect-error
+    
     this.editedItem.id = uuid.v1()
   },
   methods: {
-    test(): void {
+    test() {
       console.log(this.profile.name)
       console.log(this.$store.state.profile)
       // this.$store.commit('SET_SEED_BANK')
@@ -239,13 +239,11 @@ export default {
     share() {
       window.open(`https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fseedrs.netlify.app%2F%23%2Fuser%2F${this.fbLink}&amp;src=sdkpreparse`);
     },
-    newUUID(): void {
+    newUUID() {
       console.log('meow')
       this.uuid = uuid.v1()
-      //@ts-expect-error
       this.editedItem.id = uuid.v1()
         this.$nextTick(() => {
-          //@ts-expect-error
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
         })
@@ -262,30 +260,14 @@ export default {
       this.snackColor = 'info'
       this.snackText = 'Dialog opened'
     },
-    editItem(item: {
-      id: string; 
-      name: string;
-      quantity: number;
-      location: string;
-      notes: string;
-      contact: string;
-      available: boolean;
-      keeper: string;
-    }) {
+    editItem(item) {
       this.editedIndex = this.profile.seedBank.indexOf(item)
-      //@ts-expect-error
+      
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
-    deleteItem(item: {
-      id: string;
-      name: string;
-      quantity: number;
-      location: string;
-      notes: string;
-      contact: string;
-    }) {
+    deleteItem(item) {
       const index = this.profile.seedBank.indexOf(item)
       confirm('Are you sure you want to delete this item?') &&
         this.$store.state.profile.seedBank.splice(index, 1)
@@ -295,7 +277,7 @@ export default {
       this.$store.state.loginDialog = false
       this.dialog = false
       this.$nextTick(() => {
-        //@ts-expect-error
+        
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
@@ -306,12 +288,12 @@ export default {
       } else {
         console.log(this.$store.state.profile)
         this.$store.state.profile.seedBank.push(this.editedItem)
-        //@ts-expect-error
+        
         this.defaultItem.id = uuid.v1()
-        //@ts-expect-error
+        
         this.editedItem.id = uuid.v1()
       }
-      //@ts-expect-error
+      
       this.close()
       this.snack = true
       this.snackColor = 'success'
@@ -327,7 +309,7 @@ export default {
             this.$store.state.loginDialog = false
             // this.dialog = false
             this.$store.state.loggedIn = true
-            //@ts-expect-error
+            
             dbUserRef.doc(user.user.email).get().then(doc => {
               this.profile = doc.data()
             })

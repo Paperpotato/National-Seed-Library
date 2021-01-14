@@ -260,7 +260,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import { mapState } from 'vuex'
 import { uuid } from 'vue-uuid'
 import { dbUserRef, dbSeedBank, dbPublicUserRef } from '../services/firebase'
@@ -275,23 +275,23 @@ export default {
   data: () => {
   return {
     loading: false,
-    emailBody: '' as string,
-    dialog: false as boolean,
-    modalItemName: "" as string,
-    itemsPerPageArray: [12, 24, 36] as number[],
-    itemsPerPage: 12 as number,
-    keys: ["name", "quantity", "notes", "location"] as string[],
+    emailBody: '',
+    dialog: false,
+    modalItemName: "",
+    itemsPerPageArray: [12, 24, 36],
+    itemsPerPage: 12,
+    keys: ["name", "quantity", "notes", "location"],
     search: "",
     filter: {},
     sortDesc: false,
     page: 1,
     sortBy: "name",
-    snack: false as boolean,
-    snackColor: '' as string,
-    snackText: '' as string,
-    max25chars: (v: string) => v.length <= 25 || 'Input too long!',
+    snack: false,
+    snackColor: '',
+    snackText: '',
+    max25chars: (v) => v.length <= 25 || 'Input too long!',
     pagination: {},
-    seedList: [] as {}[],
+    seedList: [],
     headers: [
       // { text: 'id', value: 'id' },
       {
@@ -303,26 +303,26 @@ export default {
       { text: 'notes', value: 'notes' },
       { text: 'actions', value: 'actions', sortable: false },
     ],
-    contactEmail: '' as string,
+    contactEmail: '',
     uuid: '',
-    emailToContact: '' as string,
+    emailToContact: '',
         }},
   computed: {
     ...mapState(['loggedIn', 'profile']),
-    title(): string {
-      return `${this.$route.params.username}'s Hoard` as string
+    title(){
+      return `${this.$route.params.username}'s Hoard` 
     },
-    modalEmail(): string {
+    modalEmail(){
       return this.profile.email
     },
-    codedSubject(): string {
+    codedSubject(){
       return encodeURIComponent(this.modalItemName)
     },
-    codedEmailBody(): string {
+    codedEmailBody(){
       return encodeURIComponent(this.emailBody)
     },
-    numberOfPages(): number {
-      return Math.ceil(this.seedList.length / this.itemsPerPage) as number;
+    numberOfPages(){
+      return Math.ceil(this.seedList.length / this.itemsPerPage);
     },
     filteredKeys() {
       return this.keys.filter((key) => key !== `Name`);
@@ -337,10 +337,9 @@ export default {
 
     this.loading = true
         dbPublicUserRef.doc(this.$route.params.username).get().then(doc => {
-          const seedArray = [] as {}[]
+          const seedArray = []
 
-          //@ts-expect-error
-          doc.data().seedBank.forEach((seed: { id: string; name: string; quantity: number; notes: string; location: string; contact: string }) => {
+          doc.data().seedBank.forEach((seed) => {
                 seedArray.push({
                   id: seed.id,
                   name: seed.name,
@@ -389,7 +388,7 @@ export default {
     
   },
   methods: {
-    test(): void {
+    test() {
     //   this.$store.commit('SET_SEED_BANK')
     console.log(this.$route.params.username)
             dbPublicUserRef.doc(this.$route.params.username).get().then(doc => console.log(doc.data()))
@@ -400,9 +399,7 @@ export default {
       if(this.loggedIn) {
       dbPublicUserRef.doc(this.$route.params.username).get().then(doc => {
         console.log(doc.data())
-        //@ts-expect-error
         if (doc.data().seedBank.length > 0) {
-          //@ts-expect-error
           this.contactEmail = doc.data().seedBank[0].contact
           window.open(`mailto:${this.contactEmail}`);
         } else {
@@ -422,25 +419,24 @@ export default {
       //   this.$store.state.loginDialog = true
       // }
     },
-    newUUID(): void {
+    newUUID(){
       this.uuid = uuid.v1()
     },
-    sendEmail(): void {
+    sendEmail() {
       this.dialog = false
       window.open(`mailto:${this.modalEmail}?&subject=${this.codedSubject}&body=${this.codedEmailBody}`);
       this.emailBody = ''
     },
-    nextPage(): void {
-      //@ts-expect-error
+    nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
     },
-    formerPage(): void {
+    formerPage() {
       if (this.page - 1 >= 1) this.page -= 1;
     },
-    updateItemsPerPage(number: number): void {
+    updateItemsPerPage(number) {
       this.itemsPerPage = number;
     },
-    openModal(item: { name: string; contact: string }): void {
+    openModal(item) {
       if(!this.$store.state.loggedIn) {
         this.$store.state.loginDialog = true
       } else {
