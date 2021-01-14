@@ -1,10 +1,11 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import Vue from 'vue';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyCi8f9dOXY8V3PSb_K4pCRd4dyTZ1D_4UA',
+  apiKey: process.env.VUE_APP_API_KEY,
   authDomain: 'seedr-96dd2.firebaseapp.com',
   databaseURL: 'https://seedr-96dd2.firebaseio.com',
   projectId: 'seedr-96dd2',
@@ -14,7 +15,7 @@ const firebaseConfig = {
 }
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
-
+console.log(process.env.VUE_APP_API_KEY)
 const db = firebase.firestore()
 
 export const fbAuth = firebase.auth()
